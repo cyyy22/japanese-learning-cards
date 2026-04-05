@@ -302,6 +302,7 @@
     }
 
     .quiz-review .sound-btn {
+      touch-action: manipulation;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.6);
       color: var(--coffee-dark);
@@ -314,6 +315,13 @@
       transform: scale(1.05);
     }
 
+    .quiz-review .sound-btn:hover {
+      background: var(--coffee-dark);
+      border-color: var(--coffee-dark);
+      color: #fff;
+      transform: scale(1.05);
+    }
+
     .quiz-score {
       color: var(--subtle);
       font-size: 0.95rem;
@@ -322,6 +330,7 @@
     .card-wrap {
       perspective: 1200px;
       min-height: 300px;
+      touch-action: manipulation;
     }
 
     .card {
@@ -484,6 +493,9 @@
       color: var(--text);
       border: 1px solid var(--line);
     }
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
 
     .mode-btn:hover,
     .device-btn:not(.active):hover,
@@ -546,7 +558,7 @@
 
     @media (max-width: 640px) {
       .page {
-        padding: 32px 16px 56px;
+        padding: 24px 16px 48px;
       }
 
       .grid {
@@ -575,12 +587,86 @@
         font-size: 1.2rem;
       }
 
-      .mobile-nav,
+      .hero-top {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .device-switch,
+      .mode-switch,
+      .hero-center {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .device-switch,
+      .mode-switch {
+        width: 100%;
+      }
+
+      .device-switch .sound-btn,
+      .mode-switch .sound-btn {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .section > div[style*="justify-content:space-between"] {
+        flex-direction: column;
+        align-items: stretch !important;
+      }
+
+      .section-desc {
+        text-align: left !important;
+      }
+
       .quiz-toolbar,
       .quiz-footer {
         flex-direction: column;
         align-items: stretch;
       }
+
+      .mobile-nav {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .mobile-nav .sound-btn {
+        min-width: 0;
+        flex: 0 0 110px;
+      }
+
+      .mobile-progress {
+        flex: 1;
+        min-width: 56px;
+      }
+
+      .quiz-review-shell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .quiz-review-shell > .sound-btn {
+        min-width: 44px;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        flex: 0 0 44px;
+      }
+
+      .quiz-review-list {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .quiz-review-item {
+        width: 100%;
+        max-width: none;
+      }
+    }
     }
   </style>
 </head>
@@ -731,7 +817,7 @@
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/\"/g, '&quot;')
+        .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
     }
 
@@ -983,11 +1069,12 @@
     function renderWrongAnswers() {
       const reviewList = document.getElementById('quiz-review-list');
       const reviewBtn = document.getElementById('quiz-review-btn');
+      const reviewBox = document.getElementById('quiz-review');
       const progress = document.getElementById('review-progress');
       const prevBtn = document.getElementById('review-prev');
       const nextBtn = document.getElementById('review-next');
 
-      if (!reviewList || !reviewBtn) return;
+      if (!reviewList || !reviewBtn || !reviewBox) return;
 
       if (!state.quiz.wrongAnswers.length) {
         reviewList.innerHTML = '<div class="quiz-review-item"><strong>太棒了！</strong><br>這次沒有答錯任何題目。</div>';
@@ -1059,7 +1146,7 @@
       console.assert(Array.isArray(state.quiz.wrongAnswers), 'wrongAnswers 應為陣列');
     }
 
-    document.addEventListener('pointerdown', (event) => {
+    document.addEventListener('click', (event) => {
       const speakBtn = event.target.closest('[data-speak]');
       if (speakBtn) {
         event.stopPropagation();
@@ -1126,6 +1213,11 @@
       }
     });
 
+    function syncInitialDevice() {
+      const initialDevice = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+      setDevice(initialDevice);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.getVoices();
@@ -1136,7 +1228,7 @@
       renderCards('number-grid', numberCards);
       renderMobileCard('greetings');
       renderMobileCard('numbers');
-      setDevice('desktop');
+      syncInitialDevice();
       switchMode('greetings');
       renderQuizQuestion();
       runTests();
