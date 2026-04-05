@@ -136,6 +136,7 @@
       color: var(--subtle);
       text-align: center;
       flex: 1;
+      min-width: 56px;
     }
 
     .quiz-toolbar {
@@ -269,18 +270,9 @@
       color: var(--coffee-dark);
     }
 
-    .quiz-review-shell {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-
     .quiz-review-list {
       display: flex;
       justify-content: center;
-      align-items: center;
-      flex: 1;
     }
 
     .quiz-review-item {
@@ -302,7 +294,6 @@
     }
 
     .quiz-review .sound-btn {
-      touch-action: manipulation;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.6);
       color: var(--coffee-dark);
@@ -315,11 +306,28 @@
       transform: scale(1.05);
     }
 
-    .quiz-review .sound-btn:hover {
-      background: var(--coffee-dark);
-      border-color: var(--coffee-dark);
-      color: #fff;
-      transform: scale(1.05);
+    /* 修正後：箭頭和頁數放在卡片下面 */
+    .quiz-review-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .quiz-review-nav .sound-btn {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      padding: 0;
+      flex: 0 0 44px;
+    }
+
+    #review-progress {
+      font-size: 0.9rem;
+      color: var(--subtle);
+      text-align: center;
+      min-width: 56px;
     }
 
     .quiz-score {
@@ -453,6 +461,7 @@
       cursor: pointer;
       transition: all 0.18s ease;
       flex-shrink: 0;
+      touch-action: manipulation;
     }
 
     .front .sound-btn {
@@ -490,9 +499,6 @@
     .device-btn,
     .back-action-btn {
       background: var(--surface-alt);
-      color: var(--text);
-      border: 1px solid var(--line);
-    }
       color: var(--text);
       border: 1px solid var(--line);
     }
@@ -642,31 +648,9 @@
         min-width: 56px;
       }
 
-      .quiz-review-shell {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
+      .quiz-review-nav {
+        gap: 12px;
       }
-
-      .quiz-review-shell > .sound-btn {
-        min-width: 44px;
-        width: 44px;
-        height: 44px;
-        padding: 0;
-        flex: 0 0 44px;
-      }
-
-      .quiz-review-list {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .quiz-review-item {
-        width: 100%;
-        max-width: none;
-      }
-    }
     }
   </style>
 </head>
@@ -760,12 +744,12 @@
         </div>
         <div class="quiz-review" id="quiz-review">
           <h4 class="quiz-review-title">錯題一覽</h4>
-          <div class="quiz-review-shell">
+          <div class="quiz-review-list" id="quiz-review-list"></div>
+          <div class="quiz-review-nav">
             <button class="sound-btn back-action-btn" id="review-prev" aria-label="上一題">←</button>
-            <div class="quiz-review-list" id="quiz-review-list"></div>
+            <div id="review-progress"></div>
             <button class="sound-btn back-action-btn" id="review-next" aria-label="下一題">→</button>
           </div>
-          <div id="review-progress" style="font-size:0.9rem; color:var(--subtle); text-align:center; margin-top:8px;"></div>
         </div>
       </div>
     </section>
@@ -1069,12 +1053,11 @@
     function renderWrongAnswers() {
       const reviewList = document.getElementById('quiz-review-list');
       const reviewBtn = document.getElementById('quiz-review-btn');
-      const reviewBox = document.getElementById('quiz-review');
       const progress = document.getElementById('review-progress');
       const prevBtn = document.getElementById('review-prev');
       const nextBtn = document.getElementById('review-next');
 
-      if (!reviewList || !reviewBtn || !reviewBox) return;
+      if (!reviewList || !reviewBtn) return;
 
       if (!state.quiz.wrongAnswers.length) {
         reviewList.innerHTML = '<div class="quiz-review-item"><strong>太棒了！</strong><br>這次沒有答錯任何題目。</div>';
@@ -1132,6 +1115,11 @@
       }
       state.quiz.currentIndex += 1;
       renderQuizQuestion();
+    }
+
+    function syncInitialDevice() {
+      const initialDevice = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+      setDevice(initialDevice);
     }
 
     function runTests() {
@@ -1212,11 +1200,6 @@
         toggleFlip(cardWrap);
       }
     });
-
-    function syncInitialDevice() {
-      const initialDevice = window.innerWidth <= 768 ? 'mobile' : 'desktop';
-      setDevice(initialDevice);
-    }
 
     window.addEventListener('DOMContentLoaded', () => {
       if ('speechSynthesis' in window) {
