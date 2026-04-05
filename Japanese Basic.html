@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>日語學習卡片</title>
+  <style>
+    :root {
+      --bg: #eef1f4;
+      --surface: #8fa3ad;
+      --surface-alt: #e6ded6;
+      --text: #3b2b22;
+      --subtle: #7a6a5f;
+      --line: #d2c6bb;
+      --blue-muted: #8fa3ad;
+      --blue-soft: #aebfc7;
+      --coffee-dark: #4b2e2a;
+      --coffee-medium: #8b5e3c;
+      --shadow: 0 12px 30px rgba(59, 43, 34, 0.12);
+      --radius: 20px;
+      --success: #7e9b91;
+      --error: #b77769;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, var(--bg), var(--blue-soft));
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    button, select { font: inherit; }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+
+    .hero-top {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .device-switch {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+
+    .hero-center {
+      text-align: center;
+    }
+
+    .mode-switch {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: white;
+      background: var(--blue-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      color: var(--coffee-dark);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.15;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 42px;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      text-align: center;
+    }
+
+    .section-desc {
+      margin: 0 0 20px;
+      color: var(--subtle);
+      font-size: 0.98rem;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .mobile-study {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .mobile-card-shell {
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .mobile-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mobile-progress {
+      font-size: 0.92rem;
+      color: var(--subtle);
+      text-align: center;
+      flex: 1;
+    }
+
+    .quiz-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .quiz-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-label {
+      font-size: 0.95rem;
+      color: var(--subtle);
+    }
+
+    .quiz-select {
+      min-width: 132px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 0 12px;
+      background: rgba(255,255,255,0.72);
+      color: var(--text);
+    }
+
+    .quiz-card {
+      border: 2px solid var(--coffee-dark);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, #f4ece4, #e8ddd2);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .quiz-meta {
+      font-size: 0.92rem;
+      color: var(--subtle);
+      margin-bottom: 10px;
+    }
+
+    .quiz-question {
+      margin: 0 0 18px;
+      font-size: 1.8rem;
+      color: var(--coffee-dark);
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .quiz-option {
+      width: 100%;
+      min-height: 48px;
+      justify-content: flex-start;
+      padding: 10px 14px;
+      text-align: left;
+      background: rgba(255,255,255,0.72) !important;
+      color: var(--text) !important;
+      border: 1px solid var(--line) !important;
+    }
+
+    .quiz-option:hover:not([disabled]) {
+      background: var(--coffee-medium) !important;
+      color: #fff !important;
+      border-color: var(--coffee-medium) !important;
+      transform: translateY(-1px);
+    }
+
+    .quiz-option.correct {
+      background: var(--success) !important;
+      color: #fff !important;
+      border-color: var(--success) !important;
+    }
+
+    .quiz-option.wrong {
+      background: var(--error) !important;
+      color: #fff !important;
+      border-color: var(--error) !important;
+    }
+
+    .quiz-feedback {
+      min-height: 28px;
+      margin-top: 14px;
+      color: var(--coffee-dark);
+      font-weight: 600;
+    }
+
+    .quiz-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-result-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-review {
+      margin: 18px auto 0;
+      padding-top: 18px;
+      border-top: 1px dashed var(--line);
+      display: none;
+      max-width: 480px;
+    }
+
+    .quiz-review.open {
+      display: block;
+    }
+
+    .quiz-review-title {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: var(--coffee-dark);
+    }
+
+    .quiz-review-shell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .quiz-review-list {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+    }
+
+    .quiz-review-item {
+      width: min(100%, 420px);
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.6);
+    }
+
+    .quiz-review-item strong {
+      color: var(--coffee-dark);
+    }
+
+    .quiz-review-audio {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .quiz-review .sound-btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.6);
+      color: var(--coffee-dark);
+    }
+
+    .quiz-review .sound-btn:hover {
+      background: rgba(255,255,255,0.85);
+      border-color: var(--coffee-medium);
+      color: var(--coffee-dark);
+      transform: scale(1.05);
+    }
+
+    .quiz-score {
+      color: var(--subtle);
+      font-size: 0.95rem;
+    }
+
+    .card-wrap {
+      perspective: 1200px;
+      min-height: 300px;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      transform-style: preserve-3d;
+      transition: transform 0.7s ease;
+      cursor: pointer;
+    }
+
+    .card-wrap.flipped .card {
+      transform: rotateY(180deg);
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+      background: linear-gradient(145deg, var(--blue-muted), var(--blue-soft));
+      border: 2px solid var(--coffee-dark);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+      backface-visibility: hidden;
+      overflow: hidden;
+    }
+
+    .back {
+      transform: rotateY(180deg);
+      background: var(--surface-alt);
+    }
+
+    .content-block {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .jp {
+      color: #ffffff;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      word-break: break-word;
+    }
+
+    .reading {
+      color: #eef1f4;
+      font-size: 1.08rem;
+      margin: 0;
+    }
+
+    .cn {
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+      word-break: break-word;
+      color: var(--coffee-dark);
+    }
+
+    .example-title {
+      font-size: 0.85rem;
+      color: var(--subtle);
+      margin-bottom: 6px;
+    }
+
+    .example {
+      font-size: 1rem;
+      margin: 0;
+      max-width: 100%;
+      word-break: break-word;
+      color: var(--text);
+    }
+
+    .card-actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .flip-note {
+      font-size: 0.82rem;
+      color: var(--subtle);
+    }
+
+    .front .flip-note {
+      color: rgba(255,255,255,0.88);
+    }
+
+    .sound-group {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sound-btn {
+      border-radius: 12px;
+      min-width: 72px;
+      height: 38px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      flex-shrink: 0;
+    }
+
+    .front .sound-btn {
+      border: 1px solid var(--blue-muted);
+      background: var(--blue-muted);
+      color: #fff;
+    }
+
+    .front .sound-btn:hover {
+      background: var(--blue-soft);
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    .back .sound-btn {
+      border: 1px solid transparent;
+      background: var(--coffee-medium);
+      color: #fff;
+      box-sizing: border-box;
+    }
+
+    .back .sound-btn:hover {
+      border: 1px solid var(--coffee-dark);
+      background: var(--coffee-dark);
+      color: #fff;
+      transform: scale(1.05);
+      box-shadow: inset 0 0 0 1px var(--coffee-dark);
+    }
+
+    .sound-btn:active {
+      transform: scale(0.98);
+    }
+
+    .mode-btn,
+    .device-btn,
+    .back-action-btn {
+      background: var(--surface-alt);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .mode-btn:hover,
+    .device-btn:not(.active):hover,
+    .back-action-btn:hover {
+      background: var(--coffee-medium);
+      color: #fff;
+      border-color: var(--coffee-medium);
+    }
+
+    .mode-btn.active,
+    .device-btn.active {
+      background: var(--coffee-dark) !important;
+      color: #fff !important;
+      border-color: var(--coffee-dark) !important;
+    }
+
+    .start-btn {
+      background: var(--coffee-medium) !important;
+      color: #fff !important;
+      border-color: var(--coffee-medium) !important;
+    }
+
+    .start-btn:hover {
+      background: var(--coffee-dark) !important;
+      border-color: var(--coffee-dark) !important;
+    }
+
+    .is-mobile-view .desktop-study {
+      display: none;
+    }
+
+    .is-mobile-view .mobile-study {
+      display: block;
+    }
+
+    .footer-note {
+      margin-top: 52px;
+      padding: 18px 20px;
+      border: 2px solid var(--coffee-dark);
+      border-radius: 16px;
+      background: var(--blue-soft);
+      color: var(--coffee-dark);
+      font-size: 0.94rem;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(75,46,42,0.15);
+    }
+
+    @media (max-width: 860px) {
+      .hero-top {
+        grid-template-columns: 1fr;
+      }
+
+      .device-switch,
+      .mode-switch,
+      .hero-center {
+        justify-content: center;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 32px 16px 56px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .quiz-options {
+        grid-template-columns: 1fr;
+      }
+
+      .card-wrap,
+      .card {
+        min-height: 280px;
+      }
+
+      .face {
+        padding: 22px 18px;
+      }
+
+      .jp {
+        font-size: 1.7rem;
+      }
+
+      .cn {
+        font-size: 1.2rem;
+      }
+
+      .mobile-nav,
+      .quiz-toolbar,
+      .quiz-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="device-switch">
+          <button class="sound-btn device-btn active" type="button" data-device="desktop">電腦版</button>
+          <button class="sound-btn device-btn" type="button" data-device="mobile">手機版</button>
+        </div>
+        <div class="hero-center">
+          <div class="badge">Japanese Basics</div>
+          <h1>日語入門學習卡</h1>
+        </div>
+        <div class="mode-switch">
+          <button class="sound-btn mode-btn active" type="button" data-mode="greetings">問候語</button>
+          <button class="sound-btn mode-btn" type="button" data-mode="numbers">數字</button>
+          <button class="sound-btn mode-btn" type="button" data-mode="quiz">測驗</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section mode-panel" id="panel-greetings">
+      <div style="margin-bottom:6px;">
+        <h2 class="section-title" style="text-align:left; margin:0;">簡單問候語</h2>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
+        <p class="section-desc" style="text-align:left; margin:0;">點擊卡片翻面，並使用不同速度播放發音。</p>
+        <button class="sound-btn back-action-btn" data-reset-target="greeting-grid">↺ 一鍵翻回</button>
+      </div>
+      <div class="desktop-study">
+        <div class="grid" id="greeting-grid"></div>
+      </div>
+      <div class="mobile-study" id="greeting-mobile-study">
+        <div class="mobile-card-shell" id="greeting-mobile-card"></div>
+        <div class="mobile-nav">
+          <button class="sound-btn back-action-btn" type="button" data-mobile-nav="greetings" data-step="-1">← 上一張</button>
+          <div class="mobile-progress" id="greeting-mobile-progress"></div>
+          <button class="sound-btn back-action-btn" type="button" data-mobile-nav="greetings" data-step="1">下一張 →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section mode-panel" id="panel-numbers" style="display:none;">
+      <div style="margin-bottom:6px;">
+        <h2 class="section-title" style="text-align:left; margin:0;">數字 1 到 10</h2>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
+        <p class="section-desc" style="text-align:left; margin:0;">先記住數字的念法，再配合簡單例句熟悉日常用法。</p>
+        <button class="sound-btn back-action-btn" data-reset-target="number-grid">↺ 一鍵翻回</button>
+      </div>
+      <div class="desktop-study">
+        <div class="grid" id="number-grid"></div>
+      </div>
+      <div class="mobile-study" id="number-mobile-study">
+        <div class="mobile-card-shell" id="number-mobile-card"></div>
+        <div class="mobile-nav">
+          <button class="sound-btn back-action-btn" type="button" data-mobile-nav="numbers" data-step="-1">← 上一張</button>
+          <div class="mobile-progress" id="number-mobile-progress"></div>
+          <button class="sound-btn back-action-btn" type="button" data-mobile-nav="numbers" data-step="1">下一張 →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section mode-panel" id="panel-quiz" style="display:none;">
+      <div style="margin-bottom:6px;">
+        <h2 class="section-title" style="text-align:left; margin:0;">測驗模式</h2>
+      </div>
+      <div class="quiz-toolbar">
+        <div class="quiz-left">
+          <label for="quiz-category" class="quiz-label">題庫</label>
+          <select id="quiz-category" class="quiz-select">
+            <option value="greetings">問候語</option>
+            <option value="numbers">數字</option>
+            <option value="all">全部</option>
+          </select>
+        </div>
+        <button class="sound-btn back-action-btn start-btn" type="button" id="quiz-start-btn">開始 / 重新開始</button>
+      </div>
+      <div class="quiz-card" id="quiz-card">
+        <div class="quiz-meta" id="quiz-meta">請先選擇題庫並開始測驗</div>
+        <h3 class="quiz-question" id="quiz-question">點擊右側按鈕開始作答</h3>
+        <div class="quiz-options" id="quiz-options"></div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+        <div class="quiz-footer">
+          <div class="quiz-score" id="quiz-score">目前分數：0</div>
+          <div class="quiz-result-actions">
+            <button class="sound-btn back-action-btn" type="button" id="quiz-review-btn" disabled>查看錯題</button>
+          </div>
+        </div>
+        <div class="quiz-review" id="quiz-review">
+          <h4 class="quiz-review-title">錯題一覽</h4>
+          <div class="quiz-review-shell">
+            <button class="sound-btn back-action-btn" id="review-prev" aria-label="上一題">←</button>
+            <div class="quiz-review-list" id="quiz-review-list"></div>
+            <button class="sound-btn back-action-btn" id="review-next" aria-label="下一題">→</button>
+          </div>
+          <div id="review-progress" style="font-size:0.9rem; color:var(--subtle); text-align:center; margin-top:8px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      小提醒：日文學習很適合用卡片方式反覆記憶。先記住發音，再搭配例句一起看，會比單背單字更快熟悉實際用法。
+    </div>
+  </main>
+
+  <script>
+    const greetingCards = [
+      { jp: 'おはよう', reading: 'ohayou', cn: '早安', exampleJa: 'おはよう、今日は早いですね。', exampleZh: '早安，你今天很早呢。', audio: 'おはよう' },
+      { jp: 'こんにちは', reading: 'konnichiwa', cn: '你好／午安', exampleJa: 'こんにちは、はじめまして。', exampleZh: '你好，初次見面。', audio: 'こんにちは' },
+      { jp: 'こんばんは', reading: 'konbanwa', cn: '晚上好', exampleJa: 'こんばんは、今日はどうでしたか。', exampleZh: '晚上好，今天過得怎麼樣？', audio: 'こんばんは' },
+      { jp: 'ありがとう', reading: 'arigatou', cn: '謝謝', exampleJa: '手伝ってくれて、ありがとう。', exampleZh: '謝謝你幫忙。', audio: 'ありがとう' },
+      { jp: 'すみません', reading: 'sumimasen', cn: '不好意思／對不起', exampleJa: 'すみません、駅はどこですか。', exampleZh: '不好意思，車站在哪裡？', audio: 'すみません' },
+      { jp: 'さようなら', reading: 'sayounara', cn: '再見', exampleJa: 'では、また明日。さようなら。', exampleZh: '那麼，明天見，再見。', audio: 'さようなら' }
+    ];
+
+    const numberCards = [
+      { jp: '一（いち）', reading: 'いち', cn: '1', exampleJa: 'りんごを一つください。', exampleZh: '請給我一顆蘋果。', audio: 'いち' },
+      { jp: '二（に）', reading: 'に', cn: '2', exampleJa: 'ペンが二本あります。', exampleZh: '有兩支筆。', audio: 'に' },
+      { jp: '三（さん）', reading: 'さん', cn: '3', exampleJa: '三時に会いましょう。', exampleZh: '我們三點見吧。', audio: 'さん' },
+      { jp: '四（よん）', reading: 'よん', cn: '4', exampleJa: '家族は四人です。', exampleZh: '我家有四個人。', audio: 'よん' },
+      { jp: '五（ご）', reading: 'ご', cn: '5', exampleJa: '五分待ってください。', exampleZh: '請等五分鐘。', audio: 'ご' },
+      { jp: '六（ろく）', reading: 'ろく', cn: '6', exampleJa: '六ページを見てください。', exampleZh: '請看第六頁。', audio: 'ろく' },
+      { jp: '七（なな）', reading: 'なな', cn: '7', exampleJa: '七日間勉強しました。', exampleZh: '我學了七天。', audio: 'なな' },
+      { jp: '八（はち）', reading: 'はち', cn: '8', exampleJa: '八時に起きます。', exampleZh: '我八點起床。', audio: 'はち' },
+      { jp: '九（きゅう）', reading: 'きゅう', cn: '9', exampleJa: '九月に日本へ行きます。', exampleZh: '我九月要去日本。', audio: 'きゅう' },
+      { jp: '十（じゅう）', reading: 'じゅう', cn: '10', exampleJa: '十回練習しました。', exampleZh: '我練習了十次。', audio: 'じゅう' }
+    ];
+
+    const state = {
+      currentDevice: 'desktop',
+      currentMode: 'greetings',
+      mobileIndexes: { greetings: 0, numbers: 0 },
+      quiz: {
+        deck: [],
+        currentIndex: 0,
+        score: 0,
+        answered: false,
+        wrongAnswers: [],
+        reviewIndex: 0
+      }
+    };
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getJapaneseVoice() {
+      const voices = window.speechSynthesis.getVoices();
+      return voices.find((voice) => voice.lang && voice.lang.toLowerCase().includes('ja')) || null;
+    }
+
+    function speakJapanese(text, rate) {
+      if (!('speechSynthesis' in window)) {
+        alert('目前這個瀏覽器不支援語音播放功能。');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ja-JP';
+      utterance.rate = rate;
+      utterance.pitch = 1;
+      const jaVoice = getJapaneseVoice();
+      if (jaVoice) utterance.voice = jaVoice;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function toggleFlip(cardWrap) {
+      cardWrap.classList.toggle('flipped');
+    }
+
+    function createSoundButtons(audioText) {
+      const safeAudio = encodeURIComponent(audioText);
+      return `
+        <div class="sound-group" data-stop-flip="true">
+          <button class="sound-btn" type="button" data-speak="${safeAudio}" data-rate="0.5">慢速</button>
+          <button class="sound-btn" type="button" data-speak="${safeAudio}" data-rate="0.9">普通</button>
+          <button class="sound-btn" type="button" data-speak="${safeAudio}" data-rate="1.2">快速</button>
+        </div>
+      `;
+    }
+
+    function createCard(cardData) {
+      return `
+        <div class="card-wrap" tabindex="0" data-card-wrap="true">
+          <div class="card">
+            <article class="face front">
+              <div class="content-block">
+                <h3 class="jp">${escapeHtml(cardData.jp)}</h3>
+                <p class="reading">${escapeHtml(cardData.reading)}</p>
+              </div>
+              <div class="card-actions">
+                <span class="flip-note">點擊翻面</span>
+                ${createSoundButtons(cardData.audio)}
+              </div>
+            </article>
+            <article class="face back">
+              <div class="content-block">
+                <h3 class="cn">${escapeHtml(cardData.cn)}</h3>
+                <div class="example-title">例句</div>
+                <p class="example">${escapeHtml(cardData.exampleJa)}<br>${escapeHtml(cardData.exampleZh)}</p>
+              </div>
+              <div class="card-actions">
+                <span class="flip-note">點擊翻回</span>
+                ${createSoundButtons(cardData.exampleJa)}
+              </div>
+            </article>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCards(containerId, cards) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = cards.map(createCard).join('');
+    }
+
+    function getCardsByMode(mode) {
+      return mode === 'greetings' ? greetingCards : numberCards;
+    }
+
+    function renderMobileCard(mode) {
+      const cards = getCardsByMode(mode);
+      const index = state.mobileIndexes[mode];
+      const card = cards[index];
+      const cardContainer = document.getElementById(mode === 'greetings' ? 'greeting-mobile-card' : 'number-mobile-card');
+      const progressContainer = document.getElementById(mode === 'greetings' ? 'greeting-mobile-progress' : 'number-mobile-progress');
+      if (!cardContainer || !progressContainer || !card) return;
+      cardContainer.innerHTML = createCard(card);
+      progressContainer.textContent = `${index + 1} / ${cards.length}`;
+    }
+
+    function changeMobileCard(mode, step) {
+      const cards = getCardsByMode(mode);
+      const total = cards.length;
+      state.mobileIndexes[mode] = (state.mobileIndexes[mode] + step + total) % total;
+      renderMobileCard(mode);
+    }
+
+    function resetSection(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.querySelectorAll('.card-wrap').forEach((cardWrap) => cardWrap.classList.remove('flipped'));
+    }
+
+    function setDevice(device) {
+      state.currentDevice = device;
+      document.body.classList.toggle('is-mobile-view', device === 'mobile');
+      document.querySelectorAll('.device-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.device === device);
+      });
+      if (device === 'mobile') {
+        renderMobileCard('greetings');
+        renderMobileCard('numbers');
+      }
+    }
+
+    function switchMode(mode) {
+      state.currentMode = mode;
+      const panels = {
+        greetings: document.getElementById('panel-greetings'),
+        numbers: document.getElementById('panel-numbers'),
+        quiz: document.getElementById('panel-quiz')
+      };
+
+      Object.entries(panels).forEach(([key, panel]) => {
+        if (panel) panel.style.display = key === mode ? 'block' : 'none';
+      });
+
+      document.querySelectorAll('.mode-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+    }
+
+    function shuffleArray(items) {
+      const array = [...items];
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function buildQuizDeck(category) {
+      const source = category === 'all' ? [...greetingCards, ...numberCards] : getCardsByMode(category);
+      return shuffleArray(source).map((card) => {
+        const isNumber = numberCards.includes(card);
+        const question = isNumber ? card.reading : card.jp;
+        const optionPool = isNumber ? numberCards : source;
+        const pool = optionPool.filter((item) => item.cn !== card.cn).map((item) => item.cn);
+        const wrongOptions = shuffleArray(pool).slice(0, Math.min(3, pool.length));
+        const options = shuffleArray([card.cn, ...wrongOptions]);
+        return {
+          question,
+          reading: '',
+          answer: card.cn,
+          options,
+          audio: isNumber ? card.audio : card.jp
+        };
+      });
+    }
+
+    function startQuiz() {
+      const category = document.getElementById('quiz-category').value;
+      state.quiz.deck = buildQuizDeck(category);
+      state.quiz.currentIndex = 0;
+      state.quiz.score = 0;
+      state.quiz.answered = false;
+      state.quiz.wrongAnswers = [];
+      state.quiz.reviewIndex = 0;
+
+      const reviewBox = document.getElementById('quiz-review');
+      const reviewList = document.getElementById('quiz-review-list');
+      const reviewBtn = document.getElementById('quiz-review-btn');
+      const reviewProgress = document.getElementById('review-progress');
+
+      if (reviewBox) reviewBox.classList.remove('open');
+      if (reviewList) reviewList.innerHTML = '';
+      if (reviewProgress) reviewProgress.textContent = '';
+      if (reviewBtn) reviewBtn.disabled = true;
+
+      renderQuizQuestion();
+    }
+
+    function handleQuizAnswer(selected, buttonEl) {
+      if (state.quiz.answered) return;
+      const current = state.quiz.deck[state.quiz.currentIndex];
+      const allButtons = document.querySelectorAll('.quiz-option');
+      state.quiz.answered = true;
+
+      allButtons.forEach((btn) => {
+        btn.disabled = true;
+        if (btn.dataset.value === current.answer) btn.classList.add('correct');
+      });
+
+      const feedback = document.getElementById('quiz-feedback');
+      if (selected === current.answer) {
+        state.quiz.score += 1;
+        buttonEl.classList.add('correct');
+        if (feedback) feedback.textContent = '答對了！';
+      } else {
+        buttonEl.classList.add('wrong');
+        if (feedback) feedback.textContent = '答錯了！';
+        state.quiz.wrongAnswers.push({
+          question: current.question,
+          answer: current.answer,
+          selected,
+          audio: current.audio
+        });
+      }
+
+      const scoreEl = document.getElementById('quiz-score');
+      if (scoreEl) scoreEl.textContent = `目前分數：${state.quiz.score}`;
+
+      window.setTimeout(() => {
+        nextQuizQuestion();
+      }, 650);
+    }
+
+    function renderQuizQuestion() {
+      const questionEl = document.getElementById('quiz-question');
+      const metaEl = document.getElementById('quiz-meta');
+      const optionsEl = document.getElementById('quiz-options');
+      const feedbackEl = document.getElementById('quiz-feedback');
+      const scoreEl = document.getElementById('quiz-score');
+      const reviewBtn = document.getElementById('quiz-review-btn');
+
+      if (!questionEl || !metaEl || !optionsEl || !feedbackEl || !scoreEl) return;
+
+      if (!state.quiz.deck.length) {
+        questionEl.textContent = '點擊右側按鈕開始作答';
+        metaEl.textContent = '請先選擇題庫並開始測驗';
+        optionsEl.innerHTML = '';
+        feedbackEl.textContent = '';
+        scoreEl.textContent = '目前分數：0';
+        if (reviewBtn) reviewBtn.disabled = true;
+        return;
+      }
+
+      const current = state.quiz.deck[state.quiz.currentIndex];
+      metaEl.textContent = `第 ${state.quiz.currentIndex + 1} 題 / 共 ${state.quiz.deck.length} 題`;
+      questionEl.textContent = current.question;
+      optionsEl.innerHTML = current.options.map((option) => {
+        const safeValue = escapeHtml(option);
+        return `<button class="sound-btn quiz-option" type="button" data-value="${safeValue}">${safeValue}</button>`;
+      }).join('');
+      feedbackEl.textContent = '';
+      scoreEl.textContent = `目前分數：${state.quiz.score}`;
+      state.quiz.answered = false;
+    }
+
+    function renderWrongAnswers() {
+      const reviewList = document.getElementById('quiz-review-list');
+      const reviewBtn = document.getElementById('quiz-review-btn');
+      const progress = document.getElementById('review-progress');
+      const prevBtn = document.getElementById('review-prev');
+      const nextBtn = document.getElementById('review-next');
+
+      if (!reviewList || !reviewBtn) return;
+
+      if (!state.quiz.wrongAnswers.length) {
+        reviewList.innerHTML = '<div class="quiz-review-item"><strong>太棒了！</strong><br>這次沒有答錯任何題目。</div>';
+        if (progress) progress.textContent = '';
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+      } else {
+        const item = state.quiz.wrongAnswers[state.quiz.reviewIndex];
+        reviewList.innerHTML = `
+          <div class="quiz-review-item">
+            <strong>錯題 ${state.quiz.reviewIndex + 1}</strong><br>
+            題目：${escapeHtml(item.question)}<br>
+            你的答案：${escapeHtml(item.selected)}<br>
+            正確答案：${escapeHtml(item.answer)}
+            <div class="quiz-review-audio">
+              <button class="sound-btn" type="button" data-speak="${encodeURIComponent(item.audio || item.question)}" data-rate="0.9">🔊</button>
+            </div>
+          </div>
+        `;
+        if (progress) progress.textContent = `${state.quiz.reviewIndex + 1} / ${state.quiz.wrongAnswers.length}`;
+        if (prevBtn) prevBtn.disabled = state.quiz.wrongAnswers.length <= 1;
+        if (nextBtn) nextBtn.disabled = state.quiz.wrongAnswers.length <= 1;
+      }
+
+      reviewBtn.disabled = false;
+    }
+
+    function changeReview(step) {
+      const total = state.quiz.wrongAnswers.length;
+      if (!total) return;
+      state.quiz.reviewIndex = (state.quiz.reviewIndex + step + total) % total;
+      renderWrongAnswers();
+      const reviewBox = document.getElementById('quiz-review');
+      if (reviewBox) reviewBox.classList.add('open');
+    }
+
+    function nextQuizQuestion() {
+      if (!state.quiz.deck.length) return;
+      if (state.quiz.currentIndex >= state.quiz.deck.length - 1) {
+        const metaEl = document.getElementById('quiz-meta');
+        const questionEl = document.getElementById('quiz-question');
+        const optionsEl = document.getElementById('quiz-options');
+        const feedbackEl = document.getElementById('quiz-feedback');
+        const scoreEl = document.getElementById('quiz-score');
+        const reviewBtn = document.getElementById('quiz-review-btn');
+
+        if (metaEl) metaEl.textContent = '測驗完成';
+        if (questionEl) questionEl.textContent = `你的成績是 ${state.quiz.score} / ${state.quiz.deck.length}`;
+        if (optionsEl) optionsEl.innerHTML = '';
+        if (feedbackEl) feedbackEl.textContent = '可以按「開始 / 重新開始」再挑戰一次，或查看錯題。';
+        if (scoreEl) scoreEl.textContent = `最終分數：${state.quiz.score}`;
+        if (reviewBtn) reviewBtn.disabled = false;
+        renderWrongAnswers();
+        return;
+      }
+      state.quiz.currentIndex += 1;
+      renderQuizQuestion();
+    }
+
+    function runTests() {
+      console.assert(Array.isArray(buildQuizDeck('greetings')), 'greetings 題庫應該可建立');
+      console.assert(Array.isArray(buildQuizDeck('numbers')), 'numbers 題庫應該可建立');
+      const numberDeck = buildQuizDeck('numbers');
+      console.assert(numberDeck.length === numberCards.length, '數字測驗長度應等於數字卡片數');
+      console.assert(numberDeck.every((item) => /^\d+$/.test(item.answer)), '數字測驗答案應該都是數字');
+      console.assert(numberDeck.every((item) => item.reading === ''), '測驗不應顯示羅馬拼音');
+      console.assert(numberDeck.every((item) => ['いち','に','さん','よん','ご','ろく','なな','はち','きゅう','じゅう'].includes(item.question)), '數字題目應顯示日文讀音');
+      state.quiz.wrongAnswers = [{ question: 'こんにちは', answer: '你好／午安', selected: '再見', audio: 'こんにちは' }];
+      console.assert(Array.isArray(state.quiz.wrongAnswers), 'wrongAnswers 應為陣列');
+    }
+
+    document.addEventListener('pointerdown', (event) => {
+      const speakBtn = event.target.closest('[data-speak]');
+      if (speakBtn) {
+        event.stopPropagation();
+        const text = decodeURIComponent(speakBtn.dataset.speak || '');
+        const rate = Number(speakBtn.dataset.rate || '0.9');
+        speakJapanese(text, rate);
+        return;
+      }
+
+      const deviceBtn = event.target.closest('.device-btn');
+      if (deviceBtn) {
+        setDevice(deviceBtn.dataset.device);
+        return;
+      }
+
+      const modeBtn = event.target.closest('.mode-btn');
+      if (modeBtn) {
+        switchMode(modeBtn.dataset.mode);
+        return;
+      }
+
+      const resetBtn = event.target.closest('[data-reset-target]');
+      if (resetBtn) {
+        resetSection(resetBtn.dataset.resetTarget);
+        return;
+      }
+
+      const mobileNavBtn = event.target.closest('[data-mobile-nav]');
+      if (mobileNavBtn) {
+        changeMobileCard(mobileNavBtn.dataset.mobileNav, Number(mobileNavBtn.dataset.step || '0'));
+        return;
+      }
+
+      if (event.target.id === 'quiz-start-btn') {
+        startQuiz();
+        return;
+      }
+
+      if (event.target.id === 'quiz-review-btn') {
+        const reviewBox = document.getElementById('quiz-review');
+        if (reviewBox) reviewBox.classList.toggle('open');
+        return;
+      }
+
+      if (event.target.id === 'review-prev') {
+        changeReview(-1);
+        return;
+      }
+
+      if (event.target.id === 'review-next') {
+        changeReview(1);
+        return;
+      }
+
+      const quizOption = event.target.closest('.quiz-option');
+      if (quizOption) {
+        handleQuizAnswer(quizOption.dataset.value, quizOption);
+        return;
+      }
+
+      const cardWrap = event.target.closest('.card-wrap');
+      if (cardWrap && !event.target.closest('[data-stop-flip]')) {
+        toggleFlip(cardWrap);
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+      }
+
+      renderCards('greeting-grid', greetingCards);
+      renderCards('number-grid', numberCards);
+      renderMobileCard('greetings');
+      renderMobileCard('numbers');
+      setDevice('desktop');
+      switchMode('greetings');
+      renderQuizQuestion();
+      runTests();
+    });
+  </script>
+</body>
+</html>
